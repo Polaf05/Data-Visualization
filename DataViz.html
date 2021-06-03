@@ -9,7 +9,7 @@
 </head>
 <body>
 
-    <canvas id= "myChart" width= "400" height="400">
+    <canvas id= "myChart" width= "100px" height="100px">
 
     </canvas>
  
@@ -21,16 +21,16 @@
         makeChart();
 
         async function getData(){
-            const response = await fetch("ph.csv");
+            const response = await fetch("dataset3.csv");
             const data = await response.text();
 
             const table = data.split("\n").slice(1);
             
             table.forEach(row => {
                 const col = row.split(',');
-                const totalHouse =col[4];
+                const totalHouse =col[7];
                 ylabels.push(totalHouse);
-                const region = col[3];
+                const region = col[0];
                 xlabels.push(region);
                 //console.log(totalHouse, region);
             })
@@ -44,7 +44,7 @@
                 data: {
                     labels: xlabels,
                     datasets: [{
-                        label: 'Total Housing',
+                        label: 'Poverty Rate',
                         data: ylabels,
                         backgroundColor: ['rgba(255, 99, 132, 0.2)',],
                         borderColor: ['rgba(255, 99, 132, 1)',],
