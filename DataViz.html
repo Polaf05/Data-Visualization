@@ -8,50 +8,156 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.3.2/dist/chart.min.js"></script>
 </head>
 <body>
-
-    <canvas id= "myChart" width= "100px" height="100px">
-
-    </canvas>
- 
-    <script>
+    
+    <div>
+        <h2 align=center>POVERTY RATE</h2>
+        <canvas id= "myChart" width= "100px" height="100px">
+        </canvas>
+    </div>
+    <div>
+        <h2 align=center>EMPLOYMENT RATE</h2>
+        <canvas id= "uChart" width= "100px" height="100px">
+        </canvas>
+    </div>
+    <div>
+        <h2 align=center>GDP RATE</h2>
+        <canvas id= "gChart" width= "100px" height="100px">
+        </canvas>
+    </div>
+       
 
         
-        const xlabels = [];
-        const ylabels = [];
+    
+    
+    <script>
+
+        //poverty csv
+        const poverty_xlabels = [];
+        const poverty_ylabels = [];
+        const poverty_ylabels18 = [];
+
+        //gdp csv
+        const year_labels = [];
+        const unemployment_labels = [];
+        const GDP_labels = [];
+        
         makeChart();
 
         async function getData(){
-            const response = await fetch("dataset3.csv");
-            const data = await response.text();
 
-            const table = data.split("\n").slice(1);
+            //Get Data set
+            const response_pov = await fetch("poverty.csv");
+            const response_emp = await fetch("employment.csv");
+
+            //Parse CSV to Text
+            const pov_data = await response_pov.text();
+            const emp_data = await response_emp.text();
+
+            // Split texct to rows and take out index 0
+            const poverty_table = pov_data.split("\n").slice(1);
+            const emp_table = emp_data.split("\n").slice(1);
             
-            table.forEach(row => {
+            // Seperate rows to one data per ','
+            poverty_table.forEach(row => {
                 const col = row.split(',');
-                const totalHouse =col[7];
-                ylabels.push(totalHouse);
+                const pov2015 =col[2];
+                poverty_ylabels.push(pov2015);
+                const pov2018 =col[3];
+                poverty_ylabels18.push(pov2018);
+                //y axis
+                
                 const region = col[0];
-                xlabels.push(region);
-                //console.log(totalHouse, region);
+                //x axis
+                poverty_xlabels.push(region);
+            })
+
+            emp_table.forEach(row => {
+                const col = row.split(',');
+                const year = col[0];
+                year_labels.push(year);
+                const unemployment_rate = col[1];
+                unemployment_labels.push(unemployment_rate);
+                //y axis
+                
+                const GDP_rate = col[2];
+                //x axis
+                GDP_labels.push(GDP_rate);
             })
         }
 
         async function makeChart(){
             await getData();
             const ctx = document.getElementById('myChart').getContext('2d');
+            const u_ctx = document.getElementById('uChart').getContext('2d');
+            const g_ctx = document.getElementById('gChart').getContext('2d');
+            
             const myChart = new Chart(ctx, {
-                type: 'bar',
                 data: {
-                    labels: xlabels,
-                    datasets: [{
-                        label: 'Poverty Rate',
-                        data: ylabels,
-                        backgroundColor: ['rgba(255, 99, 132, 0.2)',],
-                        borderColor: ['rgba(255, 99, 132, 1)',],
-                        borderWidth: 1
-                    }]
-                },
+                datasets: [{
+                    type: 'bar',
+                    label: '2015',
+                    data: poverty_ylabels,
+                    backgroundColor: [
+                    'rgba(153, 102, 255, 0.2)',
+                    ],
+                    borderColor: [
+                    'rgb(153, 102, 255)',
+                    ],
+                }, {
+                    type: 'bar',
+                    label: '2018',
+                    data: poverty_ylabels18,
+                    backgroundColor: [
+                    'rgba(54, 162, 235, 0.2)',
+                    ],
+                    borderColor: [
+                    'rgb(54, 162, 235)',
+                    ],
+                }],
+                labels: poverty_xlabels
+            },
             });
+
+            const uChart = new Chart(u_ctx, {
+                data: {
+                datasets: [
+                    {
+                        type: 'line',
+                        label: 'employment rate',
+                        data: unemployment_labels,
+                        backgroundColor: [
+                        'rgba(54, 162, 235, 0.2)',
+                        ],
+                        borderColor: [
+                        'rgb(54, 162, 235)',
+                        ],
+                     },
+                     
+                ],
+                labels: year_labels
+            },
+            });
+
+            const gChart = new Chart(g_ctx, {
+                data: {
+                datasets: [
+                     {
+                        type: 'line',
+                        label: 'Gross Domestic Product rate',
+                        data: GDP_labels,
+                        backgroundColor: [
+                        'rgba(54, 162, 235, 0.2)',
+                        ],
+                        borderColor: [
+                        'rgb(54, 162, 235)',
+                        ],
+                     }
+                ],
+                labels: year_labels
+            },
+            });
+
+
         }
 
     </script>
