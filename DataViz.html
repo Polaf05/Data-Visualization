@@ -15,6 +15,7 @@
 
     <div>
       <h2>Average family member as of 2020 is 4.4 according to Arcgis</h2>
+      <canvas id="mChart" width="100px" height="100px"> </canvas>
     </div>
     <div>
       <h2 align="center">EMPLOYMENT RATE</h2>
@@ -26,8 +27,19 @@
     </div>
 
     <div>
-      <h2 align="center">Average Monthly Salary</h2>
-      <canvas id="mChart" width="100px" height="100px"> </canvas>
+        <h2 align="center">Income Per Family</h2>
+        <label for="persons">Choose a number of person:</label>
+
+        <select name="persons" id="persons" onchange="changeIncomeValue(parseInt(value))">
+        <option value="1">One</option>
+        <option value="3">Two</option>
+        <option value="5">Three</option>
+        <option value="7">Four</option>
+        <option value="9">Five</option>
+        <option value="11">Six</option>
+        <option value="13">Seven</option>
+        </select>
+        <canvas id="iChart" width="100px" height="100px"> </canvas>
     </div>
 
     <script>
@@ -41,9 +53,18 @@
       const unemployment_labels = [];
       const GDP_labels = [];
 
-      //gdp csv
+      //avarage salary csv
       const year_salary = [];
       const average_monthly = [];
+      
+      //income expenditure csv
+      const income_region = [];
+      var income_value = [];
+      var income_expenditure = [];
+
+      var income_table;
+
+      var iChart;
 
       makeChart();
 
@@ -52,18 +73,23 @@
         const response_pov = await fetch("poverty.csv");
         const response_emp = await fetch("employment.csv");
         const response_salary = await fetch("averagesalaryperfamily.csv");
+        const income_salary = await fetch("income.csv");
 
         //Parse CSV to Text
         const pov_data = await response_pov.text();
         const emp_data = await response_emp.text();
         const salary_data = await response_salary.text();
+        const income_data = await income_salary.text();
 
         // Split texct to rows and take out index 0
         const poverty_table = pov_data.split("\n").slice(1);
         const emp_table = emp_data.split("\n").slice(1);
         const salary_table = salary_data.split("\n").slice(1);
+        income_table = income_data.split("\n").slice(1);
 
         // Seperate rows to one data per ','
+
+        //poverty
         poverty_table.forEach((row) => {
           const col = row.split(",");
           const pov2015 = col[2];
@@ -76,7 +102,8 @@
           //x axis
           poverty_xlabels.push(region);
         });
-
+        
+        //employee
         emp_table.forEach((row) => {
           const col = row.split(",");
           const year = col[0];
@@ -89,13 +116,24 @@
           //x axis
           GDP_labels.push(GDP_rate);
         });
+
+        //Salary
         salary_table.forEach((row) => {
           const col = row.split(",");
           const year = col[0];
           year_salary.push(year);
           const average = col[1];
           average_monthly.push(average);
-          //y axis
+        });
+        //income
+        income_table.forEach((row) => {
+          const col = row.split(",");
+          const region = col[0];
+          income_region.push(region);
+          const income = col[1];
+          income_value.push(income);
+          const expenditure = col[2];
+          income_expenditure.push(expenditure);
         });
       }
 
@@ -105,6 +143,7 @@
         const u_ctx = document.getElementById("uChart").getContext("2d");
         const g_ctx = document.getElementById("gChart").getContext("2d");
         const m_ctx = document.getElementById("mChart").getContext("2d");
+        const i_ctx = document.getElementById("iChart").getContext("2d");
 
         const myChart = new Chart(ctx, {
           data: {
@@ -184,6 +223,47 @@
             labels: year_salary,
           },
         });
+
+        iChart = new Chart(i_ctx, {
+          data: {
+            datasets: [
+              {
+                type: "bar",
+                label: "Income",
+                data: income_value,
+                backgroundColor: ["rgba(153, 102, 255, 0.2)"],
+                borderColor: ["rgb(153, 102, 255)"],
+              },
+              {
+                type: "bar",
+                label: "Expenditure",
+                data: income_expenditure,
+                backgroundColor: ["rgba(54, 162, 235, 0.2)"],
+                borderColor: ["rgb(54, 162, 235)"],
+              },
+            ],
+            labels: income_region,
+          },
+        });
+
+      }
+
+      async function changeIncomeValue(person){
+
+        income_value = [];
+        income_expenditure = [];
+        income_table.forEach((row) => {
+          const col = row.split(",");
+          const income = col[person];
+          income_value.push(income);
+          const expenditure = col[person + 1];
+          income_expenditure.push(expenditure);
+        });
+
+        iChart.data.datasets[0].data =income_value;
+        iChart.data.datasets[1].data =income_expenditure;
+        iChart.update();
+  
       }
     </script>
   </body>
