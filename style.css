@@ -1,0 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+h1{
+  font-size: 4rem;
+  line-height: 4.5rem;
+  position: relative;
+  margin-bottom: 0.2rem;
+}
+h1::before{
+    position: absolute;
+    content: "";
+    width: 75%;
+    height: 3px;
+    background-color: black;
+    bottom: -1rem;
+    left: 0;
+}
+h2{
+    font-size: 2rem;
+}
+.row{
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+}
+.column-one{
+    width: 60%;
+    height: 100%;
+    padding: 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+.column-two{
+    width: 40%;
+    height: 4000px;
+    background-color: #E98C8C;
+}
+
+.chart{
+    max-width: 90%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.left{
+    margin-left: 25rem;
+    font-weight: 400;
+}
+.center{
+    margin-left: 10rem;
+    font-weight: 400;
+    margin-bottom: 4rem;
+}
+.two-title{
+    padding: 6rem 2rem 2rem 0;
+    line-height: 2.4rem;
+    color: white;
+    text-align:center;
+}
+hr.solid {
+    border: 1px solid black;
+    width: 80%;
+    margin-left: 3rem;
+    margin-top: 4rem;
+}
+.second-con{
+    padding: 4rem 0 0 0;
+    text-align:center;
+    margin-left: 3.7rem;
+}
+span{
+    color: white;
+}
+.date{
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-left: 18rem;
+}
+.family{
+    margin-left: 5rem;
+    margin-top: 2rem;
+    width: 25rem;
+}
+.three{
+    text-align:right;
+    margin-right: 3.7rem;
+    margin-top: 1.5rem;
+}
+.holder{
+    margin-top: 5rem;
+}
+.total{
+    color: white;
+    font-size: 3.5rem;
+    margin-left: 13rem;
+}
+.totals{
+    color: white;
+    font-size: 3.5rem;
+    margin-left: 20rem;
+}
+.random{
+    padding: 3rem;
+}
+.qoutes{
+    font-size: 3rem;
+    margin-bottom:3rem;
+}
